@@ -8,7 +8,7 @@ However, these applications may not always use the `llms.txt` file as expected w
  
 We aim to address this by creating [a simple MCP server](https://github.com/modelcontextprotocol) that defines a few external **tools** that these applications to use: 1) to tool to load `llms.txt` and 2) a tool to fetch any website. When these tools are used, the user can specifically audit the tool calls and the context returned to better understand what is happening under the hood. It also allows the user to experiment with alternative methods, giving us *full control* over how documentation is retrieved and displayed to LLMs
 
-< add photo >
+![Screenshot 2025-03-18 at 12 55 51 PM](https://github.com/user-attachments/assets/a7440c71-6cbc-472e-9243-3bfc371bb173)
 
 ## Quickstart
 
@@ -99,7 +99,7 @@ Setup:
 * `Control-L` to open chat.
 * Ensure `agent` is selected. 
 
-< add photo >
+![Screenshot 2025-03-18 at 1 56 54 PM](https://github.com/user-attachments/assets/0dd747d0-7ec0-43d2-b6ef-cdcf5a2a30bf)
 
 Then, try an example prompt:
 ```
@@ -114,9 +114,9 @@ use the langgraph-docs-mcp server to answer any LangGraph questions --
 what are types of memory in LangGraph?
 ```
 
-Then, you'll be able to approve `tool calls` and see the context returned.
+* It will ask to approve tool calls.
 
-< add photo >
+![Screenshot 2025-03-18 at 1 58 38 PM](https://github.com/user-attachments/assets/180966b5-ab03-4b78-8b5d-bab43f5954ed)
 
 ### Windsurf
 
@@ -125,11 +125,12 @@ Setup:
 * `Control-L` to open Cascade.
 * Available MCP servers will be listed. 
 
-< add photo >
+![Screenshot 2025-03-18 at 2 02 12 PM](https://github.com/user-attachments/assets/5a29bd6a-ad9a-4c4a-a4d5-262c914c5276)
 
 Then, try the example prompt:
+* It will perform your tool calls.
 
-< add photo >
+![Screenshot 2025-03-18 at 2 03 07 PM](https://github.com/user-attachments/assets/0e24e1b2-dc94-4153-b4fa-495fd768125b)
 
 ### Claude Desktop
 
@@ -137,16 +138,22 @@ Setup:
 * Open `Settings -> Developer` to update the config.
 * Restart Claude.
 
-< add photo >
+![Screenshot 2025-03-18 at 2 05 54 PM](https://github.com/user-attachments/assets/228d96b6-8fb3-4385-8399-3e42fa08b128)
+
+* You will see your tools.
+
+![Screenshot 2025-03-18 at 2 05 39 PM](https://github.com/user-attachments/assets/71f3c507-91b2-4fa7-9bd1-ac9cbed73cfb)
 
 Then, try the example prompt:
 
-< add photo >
+* It will ask to approve tool calls.
+
+![Screenshot 2025-03-18 at 2 06 54 PM](https://github.com/user-attachments/assets/59b3a010-94fa-4a4d-b650-5cd449afeec0)
 
 ### Claude Code
 
 Setup:
-* Run as a shortcut to add the server to your project:
+* Shortcut to add the MCP server to your project:
 ```
 claude mcp add-json langgraph-docs '{"type":"stdio","command":"uvx" ,"args":["--from", "mcpdoc", "mcpdoc", "--urls", "langgraph:https://langchain-ai.github.io/langgraph/llms.txt"]}' -s project
 ```
@@ -156,11 +163,13 @@ $ Claude
 $ /mcp 
 ```
 
-< add photo >
+![Screenshot 2025-03-18 at 2 13 49 PM](https://github.com/user-attachments/assets/eb876a0e-27b4-480e-8c37-0f683f878616)
 
 Then, try the example prompt:
 
-< add photo >
+* It will ask to approve tool calls.
+
+![Screenshot 2025-03-18 at 2 14 37 PM](https://github.com/user-attachments/assets/5b9a2938-ea69-4443-8d3b-09061faccad0)
 
 ## Command-line Interface
 
