@@ -49,6 +49,7 @@ Finally, add the server to any MCP host applications of interest.
 
 Below, we walk through each one, but here are the the config files that are updated for each:
 
+```
 *Cursor*
 `~/.cursor/mcp.json` 
 
