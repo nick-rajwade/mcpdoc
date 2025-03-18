@@ -2,11 +2,11 @@
 
 ## Overview
 
-[llms.txt](https://llmstxt.org/) is an index of website contents meant to help LLMs retrieve relevant context. As an example, [LangGraph's llms.txt](https://langchain-ai.github.io/langgraph/llms.txt) provides a list of URLs on the LangGraph website along with a short description of each one. An LLM can use this file to decide which specific pages to read in order to respond to a given query. This can be extremely useful when using IDEs like Cursor, Windsurf, or applications like Claude Code/Desktop.
+[llms.txt](https://llmstxt.org/) is a standard index of website contents to help LLMs. As an example, [LangGraph's llms.txt](https://langchain-ai.github.io/langgraph/llms.txt) provides a curated list of LangGraph doc URLs with a short description of each one. An LLM can use this file to decide which pages to read when accomplishing tasks, and pairs well with IDEs like Cursor and Windsurf or applications like Claude Code/Desktop.
 
-However, these applications may not always use the `llms.txt` file as expected with their built-in tools. For example, sometimes the agents in IDEs like Cursor will reflect on the `llms.txt` file and use it for formulate *general web search queries* rather than retrieving the specific URLs listed! There can be poor visibility into what these applications are doing with their built-in retrieval / search tools.
- 
-We aim to address this by creating [a simple MCP server](https://github.com/modelcontextprotocol) that defines a few external **tools** that these applications to use: 1) to tool to load `llms.txt` and 2) a tool to fetch any website. When these tools are used, the user can specifically audit the tool calls and the context returned to better understand what is happening under the hood. It also allows the user to experiment with alternative methods, giving us *full control* over how documentation is retrieved and displayed to LLMs
+However, these applications use different built-in tools to read and process files like `llms.txt`; sometimes IDEs will reflect on the `llms.txt` file and use it for formulate *web search queries* rather than retrieving the specific URLs listed! More broadly, there can be poor visibility into what applications are doing with their built-in retrieval / search tools.
+
+[MCP](https://github.com/modelcontextprotocol) offers a way for developers to define tools that give us *full control* over how documentation is retrieved and displayed to LLMs in these applications. Here, we create [a simple MCP server](https://github.com/modelcontextprotocol) that defines a few basical external **tools** that these applications can use: 1) to tool to load `llms.txt` and 2) fetch specific URLs within `llms.txt`. When these tools are used, the user can customize retrieval and audit the tool calls / the context returned to better understand what is happening under the hood. 
 
 ![Screenshot 2025-03-18 at 12 55 51 PM](https://github.com/user-attachments/assets/a7440c71-6cbc-472e-9243-3bfc371bb173)
 
