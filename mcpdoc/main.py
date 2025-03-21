@@ -69,10 +69,7 @@ def create_server(
         
         This is the first tool you should call in the documentation workflow.
         It provides URLs to llms.txt files that the user has made available.
-        
-        Args:
-            None
-            
+                    
         Returns:
             A string containing a formatted list of documentation sources with their URLs
         """
