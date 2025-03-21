@@ -66,10 +66,10 @@ def create_server(
     @server.tool()
     def list_doc_sources() -> str:
         """List all available documentation sources.
-        
+
         This is the first tool you should call in the documentation workflow.
         It provides URLs to llms.txt files that the user has made available.
-                    
+
         Returns:
             A string containing a formatted list of documentation sources with their URLs
         """
@@ -86,15 +86,15 @@ def create_server(
     @server.tool()
     async def fetch_docs(url: str) -> str:
         """Fetch and parse documentation from a given URL.
-        
+
         Use this tool after list_doc_sources to:
         1. First fetch the llms.txt file from a documentation source
         2. Analyze the URLs listed in the llms.txt file
         3. Then fetch specific documentation pages relevant to the user's question
-        
+
         Args:
             url: The URL to fetch documentation from. Must be from an allowed domain.
-            
+
         Returns:
             The fetched documentation content converted to markdown, or an error message
             if the request fails or the URL is not from an allowed domain.
