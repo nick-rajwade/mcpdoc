@@ -41,7 +41,17 @@ def create_server(
     timeout: float = 10,
     settings: dict | None = None,
 ) -> FastMCP:
-    """Create the server and generate tools."""
+    """Create the server and generate documentation retrieval tools.
+
+    Args:
+        doc_source: List of documentation sources to make available
+        follow_redirects: Whether to follow HTTP redirects when fetching docs
+        timeout: HTTP request timeout in seconds
+        settings: Additional settings to pass to FastMCP
+
+    Returns:
+        A FastMCP server instance configured with documentation tools
+    """
     server = FastMCP(
         name="llms-txt",
         instructions=(
@@ -55,7 +65,17 @@ def create_server(
 
     @server.tool()
     def list_doc_sources() -> str:
-        """List all available doc sources. Always use this first."""
+        """List all available documentation sources.
+        
+        This is the first tool you should call in the documentation workflow.
+        It provides URLs to llms.txt files that the user has made available.
+        
+        Args:
+            None
+            
+        Returns:
+            A string containing a formatted list of documentation sources with their URLs
+        """
         content = ""
         for entry in doc_source:
             name = entry.get("name", "") or extract_domain(entry["llms_txt"])
@@ -68,9 +88,19 @@ def create_server(
 
     @server.tool()
     async def fetch_docs(url: str) -> str:
-        """Use this to fetch documentation from a given URL.
-
-        Always use list doc sources before fetching documents.
+        """Fetch and parse documentation from a given URL.
+        
+        Use this tool after list_doc_sources to:
+        1. First fetch the llms.txt file from a documentation source
+        2. Analyze the URLs listed in the llms.txt file
+        3. Then fetch specific documentation pages relevant to the user's question
+        
+        Args:
+            url: The URL to fetch documentation from. Must be from an allowed domain.
+            
+        Returns:
+            The fetched documentation content converted to markdown, or an error message
+            if the request fails or the URL is not from an allowed domain.
         """
         nonlocal allowed_domains
         if not any(url.startswith(domain) for domain in allowed_domains):
