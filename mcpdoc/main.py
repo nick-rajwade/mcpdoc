@@ -81,7 +81,7 @@ def create_server(
         return content
 
     # Parse the domain names in the llms.txt URLs
-    allowed_domains = [extract_domain(entry["llms_txt"]) for entry in doc_source]
+    allowed_domains = set(extract_domain(entry["llms_txt"]) for entry in doc_source)
 
     @server.tool()
     async def fetch_docs(url: str) -> str:
