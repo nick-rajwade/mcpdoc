@@ -63,11 +63,7 @@ npx @modelcontextprotocol/inspector
         "--urls",
         "LangGraph:https://langchain-ai.github.io/langgraph/llms.txt",
         "--transport",
-        "stdio",
-        "--port",
-        "8081",
-        "--host",
-        "localhost"
+        "stdio"
       ]
     }
   }
@@ -132,7 +128,36 @@ Then, try the example prompt:
 * Update with `langgraph-docs-mcp` as noted above.
 * Restart Claude Desktop app.
 
-> Note: currently (3/21/25) it appears that Claude Code does not support `rules` for global rules, so appending the following to your prompt.
+> [!Note]
+> If you run into issues with Python version incompatibility when trying to add MCPDoc tools to Claude Desktop, you can explicitly specify the filepath to `python` executable in the `uvx` command.
+
+> <details>
+> <summary>Example configuration</summary>
+>
+> ```
+> {
+>   "mcpServers": {
+>     "langgraph-docs-mcp": {
+>       "command": "uvx",
+>       "args": [
+>         "--python",
+>         "/path/to/python",
+>         "--from",
+>         "mcpdoc",
+>         "mcpdoc",
+>         "--urls",
+>         "LangGraph:https://langchain-ai.github.io/langgraph/llms.txt",
+>         "--transport",
+>         "stdio"
+>       ]
+>     }
+>   }
+> }
+> ```
+> </details>
+
+> [!Note]
+> Currently (3/21/25) it appears that Claude Desktop does not support `rules` for global rules, so appending the following to your prompt.
 
 ```
 <rules>
@@ -172,7 +197,8 @@ $ /mcp
 
 ![Screenshot 2025-03-18 at 2 13 49 PM](https://github.com/user-attachments/assets/eb876a0e-27b4-480e-8c37-0f683f878616)
 
-> Note: currently (3/21/25) it appears that Claude Code does not support `rules` for global rules, so appending the following to your prompt.
+> [!Note]
+> Currently (3/21/25) it appears that Claude Code does not support `rules` for global rules, so appending the following to your prompt.
 
 ```
 <rules>
