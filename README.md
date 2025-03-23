@@ -130,7 +130,7 @@ Then, try the example prompt:
 
 > [!Note]
 > If you run into issues with Python version incompatibility when trying to add MCPDoc tools to Claude Desktop, you can explicitly specify the filepath to `python` executable in the `uvx` command.
-
+>
 > <details>
 > <summary>Example configuration</summary>
 >
