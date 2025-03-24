@@ -40,6 +40,7 @@ def create_server(
     follow_redirects: bool = False,
     timeout: float = 10,
     settings: dict | None = None,
+    allowed_domains: list[str] | None = None,
 ) -> FastMCP:
     """Create the server and generate documentation retrieval tools.
 
@@ -48,6 +49,10 @@ def create_server(
         follow_redirects: Whether to follow HTTP redirects when fetching docs
         timeout: HTTP request timeout in seconds
         settings: Additional settings to pass to FastMCP
+        allowed_domains: Additional domains to allow fetching from.
+            Use ['*'] to allow all domains
+            The domain hosting the llms.txt file is always appended to the list
+            of allowed domains.
 
     Returns:
         A FastMCP server instance configured with documentation tools
@@ -81,7 +86,14 @@ def create_server(
         return content
 
     # Parse the domain names in the llms.txt URLs
-    allowed_domains = set(extract_domain(entry["llms_txt"]) for entry in doc_source)
+    domains = set(extract_domain(entry["llms_txt"]) for entry in doc_source)
+
+    # Add additional allowed domains if specified
+    if allowed_domains:
+        if "*" in allowed_domains:
+            domains = {"*"}  # Special marker for allowing all domains
+        else:
+            domains.update(allowed_domains)
 
     @server.tool()
     async def fetch_docs(url: str) -> str:
@@ -99,11 +111,11 @@ def create_server(
             The fetched documentation content converted to markdown, or an error message
             if the request fails or the URL is not from an allowed domain.
         """
-        nonlocal allowed_domains
-        if not any(url.startswith(domain) for domain in allowed_domains):
+        nonlocal domains
+        if "*" not in domains and not any(url.startswith(domain) for domain in domains):
             return (
                 "Error: URL not allowed. Must start with one of the following domains: "
-                + ", ".join(allowed_domains)
+                + ", ".join(domains)
             )
 
         try:

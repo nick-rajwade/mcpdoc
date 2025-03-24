@@ -42,6 +42,12 @@ Examples:
   
   # Using SSE transport with additional HTTP options
   mcpdoc --yaml sample_config.yaml --follow-redirects --timeout 15 --transport sse --host localhost --port 8080
+  
+  # Allow fetching from additional domains. The domains hosting the llms.txt files are always allowed.
+  mcpdoc --yaml sample_config.yaml --allowed-domains https://example.com/ https://another-example.com/
+  
+  # Allow fetching from any domain
+  mcpdoc --yaml sample_config.yaml --allowed-domains '*'
 """
 
 
@@ -73,6 +79,12 @@ def parse_args() -> argparse.Namespace:
         "--follow-redirects",
         action="store_true",
         help="Whether to follow HTTP redirects",
+    )
+    parser.add_argument(
+        "--allowed-domains",
+        type=str,
+        nargs="*",
+        help="Additional allowed domains to fetch documentation from. Use '*' to allow all domains",
     )
     parser.add_argument(
         "--timeout", type=float, default=10.0, help="HTTP request timeout in seconds"
@@ -229,6 +241,7 @@ def main() -> None:
         follow_redirects=args.follow_redirects,
         timeout=args.timeout,
         settings=settings,
+        allowed_domains=args.allowed_domains,
     )
 
     if args.transport == "sse":
