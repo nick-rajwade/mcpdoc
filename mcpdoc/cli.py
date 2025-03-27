@@ -26,8 +26,7 @@ Examples:
   mcpdoc --urls LangGraph:https://langchain-ai.github.io/langgraph/llms.txt
   
   # Using a local file (absolute or relative path)
-  mcpdoc --urls LocalDocs:/path/to/llms.txt
-  mcpdoc --urls LocalDocs:file:///path/to/llms.txt
+  mcpdoc --urls LocalDocs:/path/to/llms.txt --allowed-domains '*'
   
   # Using a YAML config file
   mcpdoc --yaml sample_config.yaml
@@ -88,7 +87,7 @@ def parse_args() -> argparse.Namespace:
         "--allowed-domains",
         type=str,
         nargs="*",
-        help="Additional allowed domains to fetch documentation from. Use '*' to allow all domains. When using only local files, all domains are allowed by default.",
+        help="Additional allowed domains to fetch documentation from. Use '*' to allow all domains.",
     )
     parser.add_argument(
         "--timeout", type=float, default=10.0, help="HTTP request timeout in seconds"
@@ -170,7 +169,7 @@ def create_doc_sources_from_urls(urls: List[str]) -> List[DocSource]:
     """Create doc sources from a list of URLs or file paths with optional names.
 
     Args:
-        urls: List of llms.txt URLs or file paths with optional names 
+        urls: List of llms.txt URLs or file paths with optional names
              (format: 'url_or_path' or 'name:url_or_path')
 
     Returns:
