@@ -169,19 +169,14 @@ def create_server(
         content = ""
         for entry_ in doc_sources:
             url_or_path = entry_["llms_txt"]
-            # For local paths or file:// URLs, use a different label
-            is_local = url_or_path.startswith("file://") or os.path.exists(url_or_path)
 
-            if is_local:
-                name = entry_.get("name", "") or os.path.basename(
-                    url_or_path.replace("file://", "")
-                )
-                content += f"{name}\n"
-                content += "Path: " + url_or_path + "\n\n"
+            if _is_http_or_https(url_or_path):
+                name = entry_.get("name", extract_domain(url_or_path))
+                content += f"{name}\nURL: {url_or_path}\n\n"
             else:
-                name = entry_.get("name", "") or extract_domain(url_or_path)
-                content += f"{name}\n"
-                content += "URL: " + url_or_path + "\n\n"
+                path = _normalize_path(url_or_path)
+                name = entry_.get("name", path)
+                content += f"{name}\nPath: {path}\n\n"
         return content
 
     fetch_docs_description = _get_fetch_description(
