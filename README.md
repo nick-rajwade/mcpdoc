@@ -20,8 +20,19 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #### Choose an `llms.txt` file to use. 
 * For example, [here's](https://langchain-ai.github.io/langgraph/llms.txt) the LangGraph `llms.txt` file.
 
-  The domains list gets populated with the sources of your llms.txt files, but since you're
-  using a local file, no domains are automatically added to the allowed list.
+> **Note: Security and Domain Access Control**
+> 
+> For security reasons, mcpdoc implements strict domain access controls:
+> 
+> 1. **Remote llms.txt files**: When you specify a remote llms.txt URL (e.g., `https://langchain-ai.github.io/langgraph/llms.txt`), mcpdoc automatically adds only that specific domain (`langchain-ai.github.io`) to the allowed domains list. This means the tool can only fetch documentation from URLs on that domain.
+> 
+> 2. **Local llms.txt files**: When using a local file, NO domains are automatically added to the allowed list. You MUST explicitly specify which domains to allow using the `--allowed-domains` parameter.
+> 
+> 3. **Adding additional domains**: To allow fetching from domains beyond those automatically included:
+>    - Use `--allowed-domains domain1.com domain2.com` to add specific domains
+>    - Use `--allowed-domains '*'` to allow all domains (use with caution)
+> 
+> This security measure prevents unauthorized access to domains not explicitly approved by the user, ensuring that documentation can only be retrieved from trusted sources.
 
 #### (Optional) Test the MCP server locally with your `llms.txt` file of choice:
 ```bash
