@@ -2,6 +2,7 @@
 
 from urllib.parse import urlparse
 
+import os
 import httpx
 from markdownify import markdownify
 from mcp.server.fastmcp import FastMCP
@@ -53,6 +54,7 @@ def create_server(
             Use ['*'] to allow all domains
             The domain hosting the llms.txt file is always appended to the list
             of allowed domains.
+            When using only local files, all domains ('*') are allowed by default.
 
     Returns:
         A FastMCP server instance configured with documentation tools
@@ -73,31 +75,52 @@ def create_server(
         """List all available documentation sources.
 
         This is the first tool you should call in the documentation workflow.
-        It provides URLs to llms.txt files that the user has made available.
+        It provides URLs to llms.txt files or local file paths that the user has made available.
 
         Returns:
-            A string containing a formatted list of documentation sources with their URLs
+            A string containing a formatted list of documentation sources with their URLs or file paths
         """
         content = ""
         for entry in doc_source:
-            name = entry.get("name", "") or extract_domain(entry["llms_txt"])
-            content += f"{name}\n"
-            content += "URL: " + entry["llms_txt"] + "\n\n"
+            url_or_path = entry["llms_txt"]
+            # For local paths or file:// URLs, use a different label
+            is_local = url_or_path.startswith("file://") or os.path.exists(url_or_path)
+            
+            if is_local:
+                name = entry.get("name", "") or os.path.basename(url_or_path.replace("file://", ""))
+                content += f"{name}\n"
+                content += "Path: " + url_or_path + "\n\n"
+            else:
+                name = entry.get("name", "") or extract_domain(url_or_path)
+                content += f"{name}\n"
+                content += "URL: " + url_or_path + "\n\n"
         return content
 
-    # Parse the domain names in the llms.txt URLs
-    domains = set(extract_domain(entry["llms_txt"]) for entry in doc_source)
+    # Parse the domain names in the llms.txt URLs and identify local file paths
+    domains = set()
+    has_local_files = False
+    
+    for entry in doc_source:
+        url = entry["llms_txt"]
+        if url.startswith("file://") or os.path.exists(url):
+            # Local file - mark that we have local files
+            has_local_files = True
+            continue
+        domains.add(extract_domain(url))
 
-    # Add additional allowed domains if specified
+    # Add additional allowed domains if specified, or set to '*' if we have local files
     if allowed_domains:
         if "*" in allowed_domains:
             domains = {"*"}  # Special marker for allowing all domains
         else:
             domains.update(allowed_domains)
+    elif has_local_files and not domains:
+        # If we have local files and no domains added yet, allow all domains by default
+        domains = {"*"}
 
     @server.tool()
     async def fetch_docs(url: str) -> str:
-        """Fetch and parse documentation from a given URL.
+        """Fetch and parse documentation from a given URL or local file.
 
         Use this tool after list_doc_sources to:
         1. First fetch the llms.txt file from a documentation source
@@ -105,13 +128,37 @@ def create_server(
         3. Then fetch specific documentation pages relevant to the user's question
 
         Args:
-            url: The URL to fetch documentation from. Must be from an allowed domain.
+            url: The URL or file path to fetch documentation from. Can be:
+                - URL from an allowed domain
+                - A local file path (absolute or relative)
+                - A file:// URL (e.g., file:///path/to/llms.txt)
 
         Returns:
             The fetched documentation content converted to markdown, or an error message
             if the request fails or the URL is not from an allowed domain.
         """
         nonlocal domains
+        
+        # Handle local file paths (either as file:// URLs or direct filesystem paths)
+        if url.startswith("file://"):
+            file_path = url[7:]  # Remove the file:// prefix
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                return markdownify(content)
+            except Exception as e:
+                return f"Error reading local file: {str(e)}"
+                
+        # Check if it's a direct filesystem path that exists
+        if os.path.exists(url):
+            try:
+                with open(url, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                return markdownify(content)
+            except Exception as e:
+                return f"Error reading local file: {str(e)}"
+        
+        # Otherwise treat as URL
         if "*" not in domains and not any(url.startswith(domain) for domain in domains):
             return (
                 "Error: URL not allowed. Must start with one of the following domains: "
@@ -123,6 +170,6 @@ def create_server(
             response.raise_for_status()
             return markdownify(response.text)
         except (httpx.HTTPStatusError, httpx.RequestError) as e:
-            return f"Encountered an HTTP error with code {e.response.status_code}"
+            return f"Encountered an HTTP error: {str(e)}"
 
     return server

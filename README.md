@@ -20,6 +20,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 #### Choose an `llms.txt` file to use. 
 * For example, [here's](https://langchain-ai.github.io/langgraph/llms.txt) the LangGraph `llms.txt` file.
 
+  The domains list gets populated with the sources of your llms.txt files, but since you're
+  using a local file, no domains are automatically added to the allowed list.
+
 #### (Optional) Test the MCP server locally with your `llms.txt` file of choice:
 ```bash
 uvx --from mcpdoc mcpdoc \

@@ -25,6 +25,10 @@ Examples:
   # Directly specifying llms.txt URLs with optional names
   mcpdoc --urls LangGraph:https://langchain-ai.github.io/langgraph/llms.txt
   
+  # Using a local file (absolute or relative path)
+  mcpdoc --urls LocalDocs:/path/to/llms.txt
+  mcpdoc --urls LocalDocs:file:///path/to/llms.txt
+  
   # Using a YAML config file
   mcpdoc --yaml sample_config.yaml
 
@@ -72,7 +76,7 @@ def parse_args() -> argparse.Namespace:
         "-u",
         type=str,
         nargs="+",
-        help="List of llms.txt URLs with optional names (format: 'url' or 'name:url')",
+        help="List of llms.txt URLs or file paths with optional names (format: 'url_or_path' or 'name:url_or_path')",
     )
 
     parser.add_argument(
@@ -84,7 +88,7 @@ def parse_args() -> argparse.Namespace:
         "--allowed-domains",
         type=str,
         nargs="*",
-        help="Additional allowed domains to fetch documentation from. Use '*' to allow all domains",
+        help="Additional allowed domains to fetch documentation from. Use '*' to allow all domains. When using only local files, all domains are allowed by default.",
     )
     parser.add_argument(
         "--timeout", type=float, default=10.0, help="HTTP request timeout in seconds"
@@ -163,10 +167,11 @@ def load_config_file(file_path: str, file_format: str) -> List[Dict[str, str]]:
 
 
 def create_doc_sources_from_urls(urls: List[str]) -> List[DocSource]:
-    """Create doc sources from a list of URLs with optional names.
+    """Create doc sources from a list of URLs or file paths with optional names.
 
     Args:
-        urls: List of llms.txt URLs with optional names (format: 'url' or 'name:url')
+        urls: List of llms.txt URLs or file paths with optional names 
+             (format: 'url_or_path' or 'name:url_or_path')
 
     Returns:
         List of DocSource objects
