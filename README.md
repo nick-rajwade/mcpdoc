@@ -87,6 +87,8 @@ npx @modelcontextprotocol/inspector
         "mcpdoc",
         "--urls",
         "LangGraph:https://langchain-ai.github.io/langgraph/llms.txt",
+        "--urls",
+        "LangChain:https://python.langchain.com/llms.txt",
         "--transport",
         "stdio"
       ]
