@@ -45,10 +45,11 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 > 
 > This security measure prevents unauthorized access to domains not explicitly approved by the user, ensuring that documentation can only be retrieved from trusted sources.
 
-#### (Optional) Test the MCP server locally with your `llms.txt` file of choice:
+#### (Optional) Test the MCP server locally with your `llms.txt` file(s) of choice:
 ```bash
 uvx --from mcpdoc mcpdoc \
     --urls LangGraph:https://langchain-ai.github.io/langgraph/llms.txt \
+    --urls LangChain:https://python.langchain.com/llms.txt \
     --transport sse \
     --port 8082 \
     --host localhost
@@ -213,7 +214,7 @@ Then, try the example prompt:
 
 * In a terminal after installing [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview), run this command to add the MCP server to your project:
 ```
-claude mcp add-json langgraph-docs '{"type":"stdio","command":"uvx" ,"args":["--from", "mcpdoc", "mcpdoc", "--urls", "langgraph:https://langchain-ai.github.io/langgraph/llms.txt"]}' -s local
+claude mcp add-json langgraph-docs '{"type":"stdio","command":"uvx" ,"args":["--from", "mcpdoc", "mcpdoc", "--urls", "langgraph:https://langchain-ai.github.io/langgraph/llms.txt", "--urls", "LangChain:https://python.langchain.com/llms.txt"]}' -s local
 ```
 * You will see `~/.claude.json` updated.
 * Test by launching Claude Code and running to view your tools:
@@ -269,16 +270,17 @@ mcpdoc --json sample_config.json
 3. Directly specifying llms.txt URLs with optional names:
 
 * URLs can be specified either as plain URLs or with optional names using the format `name:url`.
+* You can specify multiple URLs by using the `--urls` parameter multiple times.
 * This is how we loaded `llms.txt` for the MCP server above.
 
 ```bash
-mcpdoc --urls LangGraph:https://langchain-ai.github.io/langgraph/llms.txt
+mcpdoc --urls LangGraph:https://langchain-ai.github.io/langgraph/llms.txt --urls LangChain:https://python.langchain.com/llms.txt
 ```
 
 You can also combine these methods to merge documentation sources:
 
 ```bash
-mcpdoc --yaml sample_config.yaml --json sample_config.json --urls https://langchain-ai.github.io/langgraph/llms.txt
+mcpdoc --yaml sample_config.yaml --json sample_config.json --urls LangGraph:https://langchain-ai.github.io/langgraph/llms.txt --urls LangChain:https://python.langchain.com/llms.txt
 ```
 
 ## Additional Options
