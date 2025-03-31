@@ -114,6 +114,7 @@ def create_server(
     Returns:
         A FastMCP server instance configured with documentation tools
     """
+    settings = settings or {}
     server = FastMCP(
         name="llms-txt",
         instructions=(
