@@ -18,4 +18,4 @@ RUN uv pip install --system --no-cache-dir .
 EXPOSE 8082
 
 # Default command to start the MCP server
-CMD ["uvx", "--from", "mcpdoc", "mcpdoc", "--urls", "LangGraph:https://langchain-ai.github.io/langgraph/llms.txt", "LangChain:https://python.langchain.com/llms.txt", "--transport", "sse", "--port", "8082", "--host", "0.0.0.0"]
+CMD ["uvx", "--from", "mcpdoc", "mcpdoc", "--urls", "LangGraph:https://langchain-ai.github.io/langgraph/llms.txt", "LangChain:https://python.langchain.com/llms.txt", "Docker:https://docs.docker.com/llms.txt", "LangFlow:https://www.langflow.org/.well-known/llms.txt", "HandBook:https://handbook.exemplar.dev/llms-full.txt", "--transport", "sse", "--port", "8082", "--host", "0.0.0.0"]
